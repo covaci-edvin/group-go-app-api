@@ -7,7 +7,6 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDublicateFieldsDB = () => {
-  //   console.log(err);
   // const value = err.errmsg.match(/(["'])(\\?.)*?\1/);
 
   const message = `Dublicate field value: . PLease use another value`;
@@ -58,7 +57,6 @@ const sendErrorProd = (err, req, res) => {
   }
   // Operational, trusted error: send message to client
   if (err.isOperational) {
-    console.log(err);
     return res.status(err.statusCode).render('error', {
       title: 'Something went worng!',
       msg: err.message,
@@ -88,7 +86,6 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
-    console.log(process.env.NODE_ENV);
     // eslint-disable-next-line node/no-unsupported-features/es-syntax
     let error = { ...err };
     error.message = err.message;
