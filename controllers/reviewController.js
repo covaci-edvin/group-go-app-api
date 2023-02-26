@@ -4,21 +4,6 @@ const factory = require('./handlerController');
 
 exports.getAllReviews = factory.getAll(Review);
 
-// exports.getAllReviews = catchAsync(async (req, res, next) => {
-//   let filter = {};
-//   if (req.params.tourId) filter = { tour: req.params.tourId };
-
-//   const reviews = await Review.find(filter);
-
-//   res.status(200).json({
-//     status: 'succes',
-//     results: reviews.length,
-//     data: {
-//       reviews,
-//     },
-//   });
-// });
-
 exports.getReview = factory.getOne(Review);
 
 exports.setTourUserIds = (req, res, next) => {
@@ -29,17 +14,6 @@ exports.setTourUserIds = (req, res, next) => {
 };
 
 exports.createReview = factory.createOne(Review);
-
-// exports.createReview = catchAsync(async (req, res, next) => {
-//   const newReview = await Review.create(req.body);
-
-//   res.status(201).json({
-//     status: 'success',
-//     data: {
-//       review: newReview,
-//     },
-//   });
-// });
 
 exports.deleteReview = factory.deleteOne(Review);
 exports.updateReview = factory.updateOne(Review);

@@ -112,7 +112,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUser = factory.getOne(User);
+exports.getUser = factory.getOne(User, { path: 'groups' });
 
 // exports.getUser = (req, res) => {
 //   res.status(500).json({

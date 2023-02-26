@@ -45,6 +45,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordChangedAt: req.body.passwordChangedAt,
     role: req.body.role,
     active: req.body.active,
+    groups: req.body.groups,
   });
 
   const url = `${req.protocol}://${req.get('host')}/me`;
@@ -120,7 +121,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 // Only for redered pages, no errors!
-
 exports.isLoggedIn = async (req, res, next) => {
   try {
     if (req.cookies.jwt) {
@@ -154,7 +154,6 @@ exports.isLoggedIn = async (req, res, next) => {
 exports.restrictTo =
   (...roles) =>
   (req, res, next) => {
-    // roles is an array, ex:['admin', 'lead-guide']. role = 'user'
     if (!roles.includes(req.user.role)) {
       return next(
         new AppError('You do not have permission to perfom this action', 403)

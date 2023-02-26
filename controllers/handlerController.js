@@ -10,7 +10,7 @@ exports.deleteOne = (Model) =>
       return next(new AppError('No tour found with that ID', 404));
     }
 
-    res.status(204).json({
+    res.status(202).json({
       status: 'success',
       data: null,
     });
@@ -69,9 +69,9 @@ exports.getOne = (Modal, popOptions) =>
 
 exports.getAll = (Modal) =>
   catchAsync(async (req, res, next) => {
-    // allow for nested GET reviews on tour (hack)
+    // allow for nested GET (hack)
     let filter = {};
-    if (req.params.tourId) filter = { tour: req.params.tourId };
+    filter = { members: req.user.id };
 
     // EXECUTE QUERY
     const features = new APIFeatures(Modal.find(filter), req.query)

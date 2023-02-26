@@ -1,0 +1,28 @@
+[
+  {
+    "_id": "63f3af46e6ff32724c30efbf",
+    "name": "Trip to Bucharest",
+    "description": "On our way Bucharest 😛",
+    "members": [
+      "5c8a1e1a2f8fb814b56fa182",
+      "5c8a1dfa2f8fb814b56fa181",
+      "5c8a1f292f8fb814b56fa184"
+    ]
+  },
+  {
+    "_id": "63f3af46e6ff32724c30efc0",
+    "name": "Trip to Norway",
+    "description": "On our way Norway 🇳🇴",
+    "members": ["5c8a1e1a2f8fb814b56fa182", "5c8a211f2f8fb814b56fa188"]
+  },
+  {
+    "_id": "63f3af46e6ff32724c30efc1",
+    "name": "Trip to Poland",
+    "description": "On our way Poland 🇵🇱",
+    "members": [
+      "5c8a1e1a2f8fb814b56fa182",
+      "5c8a21f22f8fb814b56fa18a",
+      "5c8a1f292f8fb814b56fa184"
+    ]
+  }
+]

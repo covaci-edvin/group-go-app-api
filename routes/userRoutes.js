@@ -2,6 +2,8 @@ const express = require('express');
 
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const groupController = require('../controllers/groupController');
+const groupRouter = require('./groupRoutes');
 
 const router = express.Router();
 
@@ -15,6 +17,8 @@ router.patch('/resetPassword/:token', authController.resetPassword);
 
 // PROTECT ALL ROUTES AFTER THIS MIDDLEWARE
 router.use(authController.protect);
+
+router.use('/groups', groupRouter);
 router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);
 router.patch(

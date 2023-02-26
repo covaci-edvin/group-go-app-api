@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-const path = require('path');
 const express = require('express');
+const path = require('path');
 const morgan = require('morgan');
 const ratelimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -9,6 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const compression = require('compression');
+const cookieParser = require('cookie-parser');
 
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
@@ -16,7 +17,8 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
-const cookieParser = require('cookie-parser');
+const groupRoutes = require('./routes/groupRoutes');
+const socketIo = require('socket.io');
 
 const app = express();
 
@@ -129,6 +131,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/groups', groupRoutes);
 
 // Handling unexisting routes
 app.all('*', (req, res, next) => {
@@ -137,6 +140,8 @@ app.all('*', (req, res, next) => {
 
 //Error handling middleware
 app.use(globalErrorHandler);
+
+// const io = socketIo(app);
 
 // 4) Start Server
 module.exports = app;
