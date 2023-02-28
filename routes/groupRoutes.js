@@ -1,7 +1,7 @@
 const express = require('express');
 const groupController = require('../controllers/groupController');
 const authController = require('../controllers/authController');
-const socketController = require('../controllers/socketController');
+const socketController = require('../controllers/socketIoController');
 
 const router = express.Router({ mergeParams: true });
 
@@ -23,6 +23,6 @@ router
   .post(groupController.addGroupMember)
   .delete(groupController.removeGroupMember);
 
-router.route('/:id/share-location').post(socketController.shareLocation);
+// router.route('/:id/share-location').post(socketController.shareLocation);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const io = require('./controllers/socketIoController');
 
 process.on('uncaughtException', (err) => {
   console.log('Chaught Exception! 💥 Shutting down...');
@@ -30,6 +31,8 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
+
+io.socketIoController(server);
 
 process.on('unhandledRejection', (err) => {
   console.log('Unhandled rejection! 💥 Shutting down...');
