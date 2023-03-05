@@ -1,7 +1,6 @@
 const express = require('express');
 const groupController = require('../controllers/groupController');
 const authController = require('../controllers/authController');
-const socketController = require('../controllers/socketIoController');
 
 const router = express.Router({ mergeParams: true });
 
@@ -9,7 +8,7 @@ router.use(authController.protect);
 
 router
   .route('/')
-  .get(authController.restrictTo('admin'), groupController.getAllGroups)
+  .get(groupController.getAllGroups)
   .post(groupController.setAdminId, groupController.createGroup);
 
 router

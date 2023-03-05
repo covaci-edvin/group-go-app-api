@@ -4,8 +4,33 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const User = require('../models/userModel');
 const Email = require('../utils/email');
+const APIFeatures = require('../utils/apiFeatures');
 
-exports.getAllGroups = factory.getAll(Group);
+// exports.getAllGroups = factory.getAll(Group);
+exports.getAllGroups = catchAsync(async (req, res, next) => {
+  // allow for nested GET (hack)
+  let filter = {};
+  filter = { members: req.user.id };
+
+  // EXECUTE QUERY
+  const features = new APIFeatures(Group.find(filter), req.query)
+    .filter()
+    .sort()
+    .limitField()
+    .paginate();
+  const doc = await features.query;
+  // const doc = await features.query.explain();
+  // query.sort().select().skip().limit()
+
+  //SEND RESPONSE
+  res.status(200).json({
+    status: 'succes',
+    results: doc.length,
+    data: {
+      data: doc,
+    },
+  });
+});
 
 exports.getGroup = factory.getOne(Group);
 

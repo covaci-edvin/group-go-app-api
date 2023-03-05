@@ -1,11 +1,10 @@
 const socketIo = require('socket.io');
-const catchAsync = require('../utils/catchAsync');
 const Group = require('../models/groupModel');
 
 const locationsMap = new Map();
-let io;
+
 exports.socketIoController = function (server) {
-  io = socketIo(server);
+  const io = socketIo(server);
 
   io.on('connection', (socket) => {
     console.log(`Socket ${socket.id} connected!`);
@@ -51,36 +50,8 @@ exports.socketIoController = function (server) {
           locationData[member] = location;
         }
       });
-      io.to(groupId).emit('location-update', locationData);
+      io.to(groupId).emit('locations-update', locationData);
     });
   });
   return io;
 };
-
-// exports.shareLocation = catchAsync(async (req, res, next) => {
-//   const groupId = req.params.id;
-//   const { userId, location } = req.body;
-
-//   // Store the geolocation data in a map for the group
-//   // The map key is a combination of the group id and the user id
-
-//   locationsMap.set(`${groupId}-${userId}`, location);
-
-//   //Broadcast the updated locations map to the group
-
-//   const group = await Group.findById(groupId);
-//   const { members } = group;
-//   const locationData = {};
-//   members.forEach((member) => {
-//     const location = locationsMap.get(`${groupId}-${member}`);
-//     if (location) {
-//       locationData[member] = location;
-//     }
-//   });
-
-//   io.to(groupId).emit('locations-update', locationData);
-
-//   res.status(200).json({
-//     status: 'success',
-//   });
-// });

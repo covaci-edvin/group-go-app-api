@@ -52,9 +52,6 @@ exports.getOne = (Modal, popOptions) =>
     if (popOptions) query = query.populate(popOptions);
     const doc = await query;
 
-    // const doc = await Modal.findById(req.params.id).populate('reviews');
-    //doc.findOne({_id: req.params.id})
-
     if (!doc) {
       return next(new AppError('No document found with that ID', 404));
     }
@@ -69,19 +66,13 @@ exports.getOne = (Modal, popOptions) =>
 
 exports.getAll = (Modal) =>
   catchAsync(async (req, res, next) => {
-    // allow for nested GET (hack)
-    let filter = {};
-    filter = { members: req.user.id };
-
     // EXECUTE QUERY
-    const features = new APIFeatures(Modal.find(filter), req.query)
+    const features = new APIFeatures(Modal.find(), req.query)
       .filter()
       .sort()
       .limitField()
       .paginate();
     const doc = await features.query;
-    // const doc = await features.query.explain();
-    // query.sort().select().skip().limit()
 
     //SEND RESPONSE
     res.status(200).json({
