@@ -103,19 +103,3 @@ exports.removeGroupMember = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
-
-// exports.createGroup = catchAsync(async (req, res, next) => {
-//   req.body.members = req.user.id;
-//   req.body.admin = req.user.id;
-//   console.log(req.user);
-//   const newGroup = await Group.create(req.body);
-
-//   res.status(201).json({
-//     status: 'success',
-//     data: {
-//       group: newGroup,
-//     },
-//   });
-// });
-
-// exports.getUserGroups = catchAsync(async (req, res, next) => {});

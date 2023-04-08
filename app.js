@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+const cors = require('cors');
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
@@ -16,8 +17,7 @@ const groupRoutes = require('./routes/groupRoutes');
 
 const app = express();
 
-// app.set('view engine', 'pug');
-// app.set('views', path.join(__dirname, 'views'));
+app.use(cors());
 
 // 1) Global Middlewares
 app.use(express.static(path.join(__dirname, 'public')));
@@ -27,12 +27,11 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Limit requests from same IP
-// allow 100 requests from the same IP in 1 hour
+// Limit requests from same IP 100 per hour
 const limiter = ratelimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
-  message: 'Too many requestas from this IP, please try again in an hour!',
+  message: 'Too many requests from this IP, please try again in an hour!',
 });
 app.use('/api', limiter);
 
@@ -41,13 +40,10 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
-// Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
-// Data sanitization against XSS
 app.use(xss());
 
-// Prevent parameter polution
 app.use(
   hpp({
     whitelist: [
@@ -61,8 +57,6 @@ app.use(
   })
 );
 
-// Serving static files
-// app.use(express.static(`${__dirname}/public`));
 app.use(compression());
 // Test middleware
 app.use((req, res, next) => {

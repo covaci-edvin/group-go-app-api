@@ -57,19 +57,6 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getAllUsers = factory.getAll(User);
-// exports.getAllUsers = catchAsync(async (req, res, next) => {
-//   const users = await User.find();
-//   // query.sort().select().skip().limit()
-
-//   //SEND RESPONSE
-//   res.status(200).json({
-//     status: 'succes',
-//     results: users.length,
-//     data: {
-//       users,
-//     },
-//   });
-// });
 
 exports.getMe = (req, res, next) => {
   req.params.id = req.user.id;

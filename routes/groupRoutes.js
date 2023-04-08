@@ -22,6 +22,4 @@ router
   .post(groupController.addGroupMember)
   .delete(groupController.removeGroupMember);
 
-// router.route('/:id/share-location').post(socketController.shareLocation);
-
 module.exports = router;
