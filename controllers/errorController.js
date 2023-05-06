@@ -9,7 +9,7 @@ const handleCastErrorDB = (err) => {
 const handleDublicateFieldsDB = () => {
   // const value = err.errmsg.match(/(["'])(\\?.)*?\1/);
 
-  const message = `Dublicate field value: . PLease use another value`;
+  const message = `Dublicate field value: Please use another value`;
   return new AppError(message, 400);
 };
 
@@ -31,7 +31,7 @@ const sendErrorDev = (err, req, res) => {
   console.error('ERROR 💥', err);
   // Rendered Website
   return res.status(err.statusCode).render('error', {
-    title: 'Something went worng!',
+    title: 'Something went wrong!',
     msg: err.message,
   });
 };

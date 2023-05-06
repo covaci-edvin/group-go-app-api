@@ -10,7 +10,7 @@ module.exports = class Email {
     } else {
       this.to = user.email;
     }
-    // this.firstName = user.name.split(' ')[0];
+
     this.firstName = user.name;
     this.url = url;
     this.from = `Edvin Covaci <${process.env.EMAIL_FROM}>`;
@@ -18,7 +18,7 @@ module.exports = class Email {
   }
 
   newTransport() {
-    if (process.env.NODE_ENv === 'production') {
+    if (process.env.NODE_ENV === 'production') {
       // Sendgrid
       return 1;
     }
@@ -29,7 +29,6 @@ module.exports = class Email {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD,
       },
-      //Activate in gmail 'less secure app' option
     });
   }
 
@@ -53,6 +52,7 @@ module.exports = class Email {
 
     // 3) Create a transport and send email
     await this.newTransport().sendMail(mailOptions);
+    // console.log('send email');
   }
 
   async sendWelcome() {

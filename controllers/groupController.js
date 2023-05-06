@@ -66,7 +66,7 @@ exports.addGroupMember = catchAsync(async (req, res, next) => {
   if (groupId.members.some((member) => member._id.equals(user._id))) {
     return next(
       new AppError(
-        `This user is already a member of the groupId: ${groupId.name}`
+        `This user is already a member of the group: ${groupId.name}`
       )
     );
   }
@@ -78,7 +78,7 @@ exports.addGroupMember = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      groupId,
+      group: groupId,
     },
   });
 });
@@ -100,6 +100,8 @@ exports.removeGroupMember = catchAsync(async (req, res, next) => {
 
   res.status(202).json({
     status: 'success',
-    data: null,
+    data: {
+      group: groupId,
+    },
   });
 });
