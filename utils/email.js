@@ -37,6 +37,7 @@ module.exports = class Email {
           console.log('❌');
           console.error(error);
         });
+      return;
     }
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
