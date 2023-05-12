@@ -2,7 +2,6 @@
 const nodemailer = require('nodemailer');
 const pug = require('pug');
 const htmlToText = require('html-to-text');
-const sgMail = require('@sendgrid/mail');
 
 module.exports = class Email {
   constructor(user, url, groupName = '', emailTo = '') {
@@ -19,26 +18,26 @@ module.exports = class Email {
   }
 
   newTransport() {
-    if (process.env.NODE_ENV === 'production') {
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-      const msg = {
-        to: 'test@example.com', // Change to your recipient
-        from: 'test@example.com', // Change to your verified sender
-        subject: 'Sending with SendGrid is Fun',
-        text: 'and easy to do anywhere, even with Node.js',
-        html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-      };
-      sgMail
-        .send(msg)
-        .then(() => {
-          console.log('Email sent');
-        })
-        .catch((error) => {
-          console.log('❌');
-          console.error(error);
-        });
-      return;
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    //   const msg = {
+    //     to: 'test@example.com', // Change to your recipient
+    //     from: 'test@example.com', // Change to your verified sender
+    //     subject: 'Sending with SendGrid is Fun',
+    //     text: 'and easy to do anywhere, even with Node.js',
+    //     html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    //   };
+    //   sgMail
+    //     .send(msg)
+    //     .then(() => {
+    //       console.log('Email sent');
+    //     })
+    //     .catch((error) => {
+    //       console.log('❌');
+    //       console.error(error);
+    //     });
+    //   return;
+    // }
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
@@ -73,27 +72,34 @@ module.exports = class Email {
   }
 
   async sendWelcome() {
-    await this.send('welcome', 'Welcome to the Natours Family!');
+    console.log('send welcome email');
+
+    // await this.send('welcome', 'Welcome to the Group Go Family!');
   }
 
   async sendPasswordReset() {
-    await this.send(
-      'passwordReset',
-      'Your password reset token (valid for 10 minutes)'
-    );
+    console.log('send password reset email');
+
+    // await this.send(
+    //   'passwordReset',
+    //   'Your password reset token (valid for 10 minutes)'
+    // );
   }
 
   async sendAddedToGroup() {
-    await this.send(
-      'addedToGroup',
-      'You have been successfully added to the group'
-    );
+    console.log('send added to the group email');
+
+    // await this.send(
+    //   'addedToGroup',
+    //   'You have been successfully added to the group'
+    // );
   }
 
   async sendJoinGroupGo() {
-    await this.send(
-      'joinGroupGo',
-      `${this.firstName} tried to add you to a group on GroupGo App`
-    );
+    console.log('send join email');
+    //   await this.send(
+    //     'joinGroupGo',
+    //     `${this.firstName} tried to add you to a group on GroupGo App`
+    //   );
   }
 };

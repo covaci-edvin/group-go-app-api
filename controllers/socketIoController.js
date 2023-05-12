@@ -2,15 +2,9 @@ const socketIo = require('socket.io');
 const { promisify } = require('util');
 const { instrument } = require('@socket.io/admin-ui');
 const jwt = require('jsonwebtoken');
-
-const authController = require('./authController');
 const User = require('../models/userModel');
-
 const AppError = require('../utils/appError');
-const { disconnect } = require('process');
-const { signedCookie } = require('cookie-parser');
 // const Group = require('../models/groupModel');
-
 // const locationsMap = new Map();
 
 exports.socketIoController = function (server) {
@@ -54,6 +48,7 @@ exports.socketIoController = function (server) {
 
   io.on('connection', (socket) => {
     console.log(`${socket.id} a user connected`);
+
     socket.on('disconnect', () => {
       console.log(`${socket.id} disconnected`);
     });
@@ -61,8 +56,25 @@ exports.socketIoController = function (server) {
     socket.on('join-room', (groupId) => {
       socket.join(groupId);
     });
-    socket.on('send-invitation', (groupId, userName, groupName) => {
-      socket.to(groupId).emit('receive-invitation', userName, groupName);
+
+    socket.on(
+      'send-invitation',
+      (groupId, userName, groupName, destination, adminSocketId) => {
+        socket
+          .to(groupId)
+          .emit(
+            'receive-invitation',
+            groupId,
+            userName,
+            groupName,
+            destination,
+            adminSocketId
+          );
+      }
+    );
+
+    socket.on('joined-group-route', (user, adminId) => {
+      socket.to(adminId).emit('joined', user);
     });
 
     socket.on('delete-group', (groupId) => {
@@ -75,8 +87,6 @@ exports.socketIoController = function (server) {
       console.log(`${socket.id} left ${groupId}`);
     });
 
-    // socket.on('add-user', (groupId) => {});
-
     socket.on('join-room', (groupId, groupName) => {
       socket.join(groupId);
       console.log(
@@ -86,52 +96,52 @@ exports.socketIoController = function (server) {
   });
 
   instrument(io, { auth: false });
-  // io.on('connection', (socket) => {
-  //   console.log(`Socket ${socket.id} connected!`);
-
-  //   // Join a room based on the group id
-  //   socket.on('join-group', async (groupId) => {
-  //     socket.join(groupId);
-  //     console.log(`Socket ${socket.id} joined group ${groupId}`);
-  //     // Fetch the group members and emit the list to the client
-  //     const group = await Group.findById(groupId);
-  //     const { members } = group;
-  //     io.to(groupId).emit('members', members);
-
-  //     // Emit the current location data to the client
-  //     const locationData = {};
-  //     members.forEach((member) => {
-  //       const location = locationsMap.get(`${groupId}:${member}`);
-  //       if (location) {
-  //         locationData[member] = location;
-  //       }
-  //     });
-  //     socket.emit('locations-update', locationData);
-  //   });
-
-  //   // Receive geolocation data from a client and broadcast it to the group
-  //   socket.on('share-location', async (data) => {
-  //     const { groupId, userId, location } = data;
-  //     console.log(
-  //       `Socket ${socket.id} shared location for user ${userId} in group ${groupId}: ${location}`
-  //     );
-
-  //     // Update the locations map for the group
-  //     locationsMap.set(`${groupId}-${userId}`, location);
-
-  //     // Broadcast the updated locations map to the group
-  //     const group = await Group.findById(groupId);
-  //     const { members } = group;
-  //     const locationData = {};
-
-  //     members.forEach((member) => {
-  //       const location = locationsMap.get(`${groupId}-${member}`);
-  //       if (location) {
-  //         locationData[member] = location;
-  //       }
-  //     });
-  //     io.to(groupId).emit('locations-update', locationData);
-  //   });
-  // });
   return io;
 };
+// io.on('connection', (socket) => {
+//   console.log(`Socket ${socket.id} connected!`);
+
+//   // Join a room based on the group id
+//   socket.on('join-group', async (groupId) => {
+//     socket.join(groupId);
+//     console.log(`Socket ${socket.id} joined group ${groupId}`);
+//     // Fetch the group members and emit the list to the client
+//     const group = await Group.findById(groupId);
+//     const { members } = group;
+//     io.to(groupId).emit('members', members);
+
+//     // Emit the current location data to the client
+//     const locationData = {};
+//     members.forEach((member) => {
+//       const location = locationsMap.get(`${groupId}:${member}`);
+//       if (location) {
+//         locationData[member] = location;
+//       }
+//     });
+//     socket.emit('locations-update', locationData);
+//   });
+
+//   // Receive geolocation data from a client and broadcast it to the group
+//   socket.on('share-location', async (data) => {
+//     const { groupId, userId, location } = data;
+//     console.log(
+//       `Socket ${socket.id} shared location for user ${userId} in group ${groupId}: ${location}`
+//     );
+
+//     // Update the locations map for the group
+//     locationsMap.set(`${groupId}-${userId}`, location);
+
+//     // Broadcast the updated locations map to the group
+//     const group = await Group.findById(groupId);
+//     const { members } = group;
+//     const locationData = {};
+
+//     members.forEach((member) => {
+//       const location = locationsMap.get(`${groupId}-${member}`);
+//       if (location) {
+//         locationData[member] = location;
+//       }
+//     });
+//     io.to(groupId).emit('locations-update', locationData);
+//   });
+// });
