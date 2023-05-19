@@ -4,16 +4,11 @@ const { instrument } = require('@socket.io/admin-ui');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
-// const Group = require('../models/groupModel');
-// const locationsMap = new Map();
 
 exports.socketIoController = function (server) {
   const io = socketIo(server);
 
-  // io.use(authController.protect);
-
   io.use(async (socket, next) => {
-    // console.log(socket.handshake.auth.token);
     if (socket.handshake.auth.token) {
       const decoded = await promisify(jwt.verify)(
         socket.handshake.auth.token,
@@ -37,7 +32,6 @@ exports.socketIoController = function (server) {
           )
         );
       }
-
       next();
     } else {
       next(
@@ -51,10 +45,6 @@ exports.socketIoController = function (server) {
 
     socket.on('disconnect', () => {
       console.log(`${socket.id} disconnected`);
-    });
-
-    socket.on('join-room', (groupId) => {
-      socket.join(groupId);
     });
 
     socket.on(
@@ -77,6 +67,14 @@ exports.socketIoController = function (server) {
       socket.to(adminId).emit('joined', user);
     });
 
+    socket.on('leave-group-route', (userId, adminId) => {
+      socket.to(adminId).emit('left', userId);
+    });
+
+    socket.on('group-route-started', (groupId) => {
+      socket.to(groupId).emit('group-route-started', groupId);
+    });
+
     socket.on('delete-group', (groupId) => {
       io.socketsLeave('groupId');
       console.log(`${groupId} cleared`);
@@ -90,9 +88,20 @@ exports.socketIoController = function (server) {
     socket.on('join-room', (groupId, groupName) => {
       socket.join(groupId);
       console.log(
-        `${socket.id} connected to the room ${groupName} with the id: ${groupId} `
+        `${socket.id} connected to the room ${groupName} with the id`
       );
     });
+
+    socket.on('broadcast-location', (groupId, origin, userId, color) => {
+      socket.to(groupId).emit('location', origin, userId, color);
+    });
+
+    socket.on(
+      'broadcast-response-location',
+      (groupId, origin, userId, color) => {
+        socket.to(groupId).emit('response-location', origin, userId, color);
+      }
+    );
   });
 
   instrument(io, { auth: false });
